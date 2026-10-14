@@ -47,6 +47,7 @@ class _LayarAwalState extends State<LayarAwal> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Patungan Langganan')),
+      // membuat eror
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -80,6 +81,7 @@ class _LayarAwalState extends State<LayarAwal> {
               ),
             ),
           ),
+          
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text('Daftar Patungan Aktif', style: text.titleMedium),
@@ -89,28 +91,30 @@ class _LayarAwalState extends State<LayarAwal> {
             child: _daftarLangganan.isEmpty
                 ? Center(
                     key: const Key('empty-state'),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.receipt_long_outlined, size: 64, color: scheme.outline),
-                        const SizedBox(height: 16),
-                        Text('Belum ada tagihan', style: text.titleLarge),
-                        const SizedBox(height: 8),
-                        Text('Tambahkan langganan pertama Anda.', style: text.bodyMedium),
-                        const SizedBox(height: 16),
-                        FilledButton.tonal(
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => LayarTambah(onSimpan: _tambahLangganan),
-                            ));
-                          },
-                          child: const Text('Mulai Patungan'),
-                        )
-                      ],
-                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.receipt_long_outlined, size: 64, color: scheme.outline),
+                          const SizedBox(height: 16),
+                          Text('Belum ada tagihan', style: text.titleLarge),
+                          const SizedBox(height: 8),
+                          Text('Tambahkan langganan pertama Anda.', style: text.bodyMedium),
+                          const SizedBox(height: 16),
+                          FilledButton.tonal(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) => LayarTambah(onSimpan: _tambahLangganan),
+                              ));
+                            },
+                            child: const Text('Mulai Patungan'),
+                          )
+                        ],
+                      ),
+                    )
                   )
                 : LayoutBuilder(
-                    builder: (context, constraints) {
+                    builder: (context, constraints) { 
                       final isWide = constraints.maxWidth >= 600;
 
                       if (isWide) {
@@ -180,12 +184,18 @@ class _LayarAwalState extends State<LayarAwal> {
           );
         },
         leading: const Icon(Icons.subscriptions),
-        title: Text(
-          item.nama, 
-          style: text.titleMedium,
-          maxLines: 1, 
-          overflow: TextOverflow.ellipsis,
+        // membuat eror
+        title: Row( 
+          children: [
+            Text(item.nama,style: text.titleMedium),
+          ]
         ),
+        // title: Text(
+          // item.nama, 
+          // style: text.titleMedium,
+          // maxLines: 1, 
+          // overflow: TextOverflow.ellipsis,
+        // ),
         subtitle: Align(
           alignment: Alignment.centerLeft,
           child: Chip(

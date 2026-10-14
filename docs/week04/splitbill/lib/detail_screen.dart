@@ -78,18 +78,31 @@ class _LayarDetailState extends State<LayarDetail> {
           if (!l.sudahLunas())
             Padding(
               padding: const EdgeInsets.all(16),
-              child: SizedBox(
-                width: double.infinity,
-                child: FilledButton.tonalIcon(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Pengingat dikirim!')),
-                    );
-                  },
-                  icon: const Icon(Icons.notifications_active_outlined),
-                  label: const Text('Ingatkan yang belum bayar'),
-                ),
+              // membuat eror
+              child: Row(
+                children: [
+                  Container(
+                    width: 800,
+                    height: 50,
+                    color: Colors.red,
+                    child: const Center(
+                      child: Text('Tombol Error'),
+                    ),
+                  ),
+                ],
               ),
+              // child: SizedBox(
+              //   width: double.infinity,
+              //   child: FilledButton.tonalIcon(
+              //     onPressed: () {
+              //       ScaffoldMessenger.of(context).showSnackBar(
+              //         const SnackBar(content: Text('Pengingat dikirim!')),
+              //       );
+              //     },
+              //     icon: const Icon(Icons.notifications_active_outlined),
+              //     label: const Text('Ingatkan yang belum bayar'),
+              //   ),
+              // ),
             ),
         ],
       ),
