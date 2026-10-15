@@ -47,108 +47,110 @@ class _LayarAwalState extends State<LayarAwal> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Patungan Langganan')),
-      // membuat eror
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: double.infinity,
-            child: Card.filled(
-              color: scheme.primaryContainer,
-              margin: const EdgeInsets.all(16),
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Total Tagihan',
-                      style: text.labelLarge?.copyWith(color: scheme.onPrimaryContainer),
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverToBoxAdapter(
+              child: SizedBox(
+                width: double.infinity,
+                child: Card.filled(
+                  color: scheme.primaryContainer,
+                  margin: const EdgeInsets.all(16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Total Tagihan',
+                          style: text.labelLarge?.copyWith(color: scheme.onPrimaryContainer),
+                        ),
+                        Text(
+                          'Rp $totalTagihan',
+                          style: text.displaySmall?.copyWith(
+                            color: scheme.onPrimaryContainer,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          '$belumLunas langganan belum lunas',
+                          style: text.bodyMedium?.copyWith(color: scheme.onPrimaryContainer),
+                        ),
+                      ],
                     ),
-                    Text(
-                      'Rp $totalTagihan',
-                      style: text.displaySmall?.copyWith(
-                        color: scheme.onPrimaryContainer,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      '$belumLunas langganan belum lunas',
-                      style: text.bodyMedium?.copyWith(color: scheme.onPrimaryContainer),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-          
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text('Daftar Patungan Aktif', style: text.titleMedium),
-          ),
-          
-          Expanded(
-            child: _daftarLangganan.isEmpty
-                ? Center(
-                    key: const Key('empty-state'),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.receipt_long_outlined, size: 64, color: scheme.outline),
-                          const SizedBox(height: 16),
-                          Text('Belum ada tagihan', style: text.titleLarge),
-                          const SizedBox(height: 8),
-                          Text('Tambahkan langganan pertama Anda.', style: text.bodyMedium),
-                          const SizedBox(height: 16),
-                          FilledButton.tonal(
-                            onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                builder: (context) => LayarTambah(onSimpan: _tambahLangganan),
-                              ));
-                            },
-                            child: const Text('Mulai Patungan'),
-                          )
-                        ],
-                      ),
-                    )
-                  )
-                : LayoutBuilder(
-                    builder: (context, constraints) { 
-                      final isWide = constraints.maxWidth >= 600;
 
-                      if (isWide) {
-                        return GridView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 400, 
-                            mainAxisExtent: 100, 
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 8,
-                          ),
-                          itemCount: _daftarLangganan.length,
-                          itemBuilder: (context, index) {
-                            return _buildLanggananCard(
-                                context, _daftarLangganan[index], scheme, text);
-                          },
-                        );
-                      } else {
-                        return ListView.builder(
-                          itemCount: _daftarLangganan.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: _buildLanggananCard(
-                                  context, _daftarLangganan[index], scheme, text),
-                            );
-                          },
-                        );
-                      }
-                    },
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text('Daftar Patungan Aktif', style: text.titleMedium),
+              ),
+            ),
+          ];
+        },
+
+        body: _daftarLangganan.isEmpty
+            ? Center(
+                key: const Key('empty-state'),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.receipt_long_outlined, size: 64, color: scheme.outline),
+                      const SizedBox(height: 16),
+                      Text('Belum ada tagihan', style: text.titleLarge),
+                      const SizedBox(height: 8),
+                      Text('Tambahkan langganan pertama Anda.', style: text.bodyMedium),
+                      const SizedBox(height: 16),
+                      FilledButton.tonal(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => LayarTambah(onSimpan: _tambahLangganan),
+                          ));
+                        },
+                        child: const Text('Mulai Patungan'),
+                      )
+                    ],
                   ),
-          ),
+                )
+              )
+            : LayoutBuilder(
+                builder: (context, constraints) { 
+                  final isWide = constraints.maxWidth >= 600;
+
+                  if (isWide) {
+                    return GridView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 400, 
+                        mainAxisExtent: 100, 
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 8,
+                      ),
+                      itemCount: _daftarLangganan.length,
+                      itemBuilder: (context, index) {
+                        return _buildLanggananCard(
+                            context, _daftarLangganan[index], scheme, text);
+                      },
+                    );
+                  } else {
+                    return ListView.builder(
+                      itemCount: _daftarLangganan.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: _buildLanggananCard(
+                              context, _daftarLangganan[index], scheme, text),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
           
-        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
@@ -184,18 +186,12 @@ class _LayarAwalState extends State<LayarAwal> {
           );
         },
         leading: const Icon(Icons.subscriptions),
-        // membuat eror
-        title: Row( 
-          children: [
-            Text(item.nama,style: text.titleMedium),
-          ]
+        title: Text(
+          item.nama, 
+          style: text.titleMedium,
+          maxLines: 1, 
+          overflow: TextOverflow.ellipsis,
         ),
-        // title: Text(
-          // item.nama, 
-          // style: text.titleMedium,
-          // maxLines: 1, 
-          // overflow: TextOverflow.ellipsis,
-        // ),
         subtitle: Align(
           alignment: Alignment.centerLeft,
           child: Chip(

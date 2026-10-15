@@ -20,42 +20,52 @@ class _LayarDetailState extends State<LayarDetail> {
 
     return Scaffold(
       appBar: AppBar(title: Text(l.nama)),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Card.filled(
-            color: scheme.primaryContainer,
-            margin: const EdgeInsets.all(16),
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${l.hitungSudahBayar()} dari ${l.anggota.length} sudah bayar',
-                    style: text.headlineMedium?.copyWith(
-                      color: scheme.onPrimaryContainer,
-                      fontWeight: FontWeight.bold,
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+        return [
+          SliverToBoxAdapter(
+            child: Card.filled(
+              color: scheme.primaryContainer,
+              margin: const EdgeInsets.all(16),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${l.hitungSudahBayar()} dari ${l.anggota.length} sudah bayar',
+                      style: text.headlineMedium?.copyWith(
+                        color: scheme.onPrimaryContainer,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  LinearProgressIndicator(
-                    value: l.hitungSudahBayar() / l.anggota.length,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Iuran Rp ${l.hitungIuran()} / orang • tagihan tiap tanggal ${l.tanggalTagihan}',
-                    style: text.bodyMedium
-                        ?.copyWith(color: scheme.onPrimaryContainer),
-                  ),
-                ],
+                    const SizedBox(height: 12),
+                    LinearProgressIndicator(
+                      value: l.hitungSudahBayar() / l.anggota.length,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Iuran Rp ${l.hitungIuran()} / orang • tagihan tiap tanggal ${l.tanggalTagihan}',
+                      style: text.bodyMedium
+                          ?.copyWith(color: scheme.onPrimaryContainer),
+                    ),
+                  ],
+                ),
               ),
+            )
+          ),
+
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text('Status Anggota', style: text.titleMedium),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text('Status Anggota', style: text.titleMedium),
-          ),
+        ];
+      },
+
+      body: Column(
+        children: [
           Expanded(
             child: ListView.builder(
               itemCount: l.anggota.length,
@@ -63,7 +73,7 @@ class _LayarDetailState extends State<LayarDetail> {
                 final a = l.anggota[index];
                 return CheckboxListTile(
                   value: a.sudahBayar,
-                  title: Text(a.nama),
+                  title: Text(a.nama, maxLines: 1, overflow: TextOverflow.ellipsis),
                   subtitle: Text(a.sudahBayar ? 'Sudah bayar' : 'Belum bayar'),
                   onChanged: (nilai) {
                     setState(() {
@@ -78,33 +88,21 @@ class _LayarDetailState extends State<LayarDetail> {
           if (!l.sudahLunas())
             Padding(
               padding: const EdgeInsets.all(16),
-              // membuat eror
-              child: Row(
-                children: [
-                  Container(
-                    width: 800,
-                    height: 50,
-                    color: Colors.red,
-                    child: const Center(
-                      child: Text('Tombol Error'),
-                    ),
-                  ),
-                ],
+              child: SizedBox(
+                width: double.infinity,
+                child: FilledButton.tonalIcon(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Pengingat dikirim!')),
+                    );
+                  },
+                  icon: const Icon(Icons.notifications_active_outlined),
+                  label: const Text('Ingatkan yang belum bayar'),
+                ),
               ),
-              // child: SizedBox(
-              //   width: double.infinity,
-              //   child: FilledButton.tonalIcon(
-              //     onPressed: () {
-              //       ScaffoldMessenger.of(context).showSnackBar(
-              //         const SnackBar(content: Text('Pengingat dikirim!')),
-              //       );
-              //     },
-              //     icon: const Icon(Icons.notifications_active_outlined),
-              //     label: const Text('Ingatkan yang belum bayar'),
-              //   ),
-              // ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
